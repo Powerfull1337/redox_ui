@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "924224930201",
+    "project_id": "redox-backend",
+    "storage_bucket": "redox-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924224930201:android:b9f85cf8f5e974a3141308",
+        "android_client_info": {
+          "package_name": "com.example.redox_ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEYSjIuyO9jFtCkgrTt1f-Z-suzDFYfUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
