@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:redox_ui/colors.dart';
 import 'package:redox_ui/features/landing/screens/landing_screen.dart';
 import 'package:redox_ui/firebase_options.dart';
+import 'package:redox_ui/widgets/contacts_list.dart';
 /*import 'package:redox_ui/screens/mobile_layout_screen.dart';
 import 'package:redox_ui/screens/web_layout_screen.dart';
 import 'package:redox_ui/utils/responsive_layout.dart';*/
