@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:redox_ui/colors.dart';
 import 'package:redox_ui/common/widgets/custom_button.dart';
+import 'package:redox_ui/features/auth/screens/login_screen.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
+
+void navigateToLoginScreen(BuildContext context){
+  Navigator.pushNamed(context, LoginScreen.routeName);
+}
   @override
   Widget build(BuildContext context) {
     final size =  MediaQuery.of(context).size;
@@ -43,7 +48,12 @@ class LandingScreen extends StatelessWidget {
               width: size.width * 0.75,
               child: CustomButton(
                 text: 'AGREE AND CONTINUE',
-                onPressed: (){},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                },
               ),
             ),
           ],
