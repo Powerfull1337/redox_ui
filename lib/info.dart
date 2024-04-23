@@ -11,7 +11,7 @@ const info = [
     'message': 'Hello, whats up',
     'time': '2:25 pm',
     'profilePic':
-        'https://i.natgeofe.com/k/0ed36c42-672a-425b-9e62-7cc946b98051/pig-fence_square.jpg',
+        'https://static.wikia.nocookie.net/anime-characters-fight/images/6/6e/Dark_Souls_Verse.png/revision/latest/scale-to-width-down/700?cb=20190908125159&path-prefix=ru',
   },
   {
     'name': 'Denis saloed',

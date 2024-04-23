@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:redox_ui/common/widgets/error.dart';
 import 'package:redox_ui/features/auth/screens/login_screen.dart';
+import 'package:redox_ui/features/auth/screens/otp_screen.dart';
+import 'package:redox_ui/features/auth/screens/user_information_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -9,9 +10,19 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       );
-      default:
-      return MaterialPageRoute(builder: (context)=> const Scaffold(
-        body: ErrorScreen(error: 'This page does\'nt exist'),
-      ),);
+    case OTPScreen.routeName:
+      final verificationId = settings.arguments as String;
+      return MaterialPageRoute(
+          builder: (context) => OTPScreen(verificationId: verificationId));
+    case UserInformationScreen.routeName:
+     // final verificationId = settings.arguments as String;
+      return MaterialPageRoute(
+          builder: (context) => const UserInformationScreen());
+    default:
+      return MaterialPageRoute(
+        builder: (context) => const Scaffold(
+          body: ErrorScreen(error: 'This page does\'nt exist'),
+        ),
+      );
   }
-} 
+}
