@@ -3,6 +3,8 @@ import 'package:redox_ui/common/widgets/error.dart';
 import 'package:redox_ui/features/auth/screens/login_screen.dart';
 import 'package:redox_ui/features/auth/screens/otp_screen.dart';
 import 'package:redox_ui/features/auth/screens/user_information_screen.dart';
+import 'package:redox_ui/features/select_contacts/screens/select_contact_screen.dart';
+import 'package:redox_ui/screens/mobile_chat_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -15,9 +17,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => OTPScreen(verificationId: verificationId));
     case UserInformationScreen.routeName:
-     // final verificationId = settings.arguments as String;
       return MaterialPageRoute(
           builder: (context) => const UserInformationScreen());
+    case SelectContactsScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const SelectContactsScreen());
+    case MobileChatScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const MobileChatScreen());
     default:
       return MaterialPageRoute(
         builder: (context) => const Scaffold(

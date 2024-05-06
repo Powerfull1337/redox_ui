@@ -4,6 +4,7 @@ import 'package:redox_ui/info.dart';
 import 'package:redox_ui/widgets/chat_list.dart';
 
 class MobileChatScreen extends StatelessWidget {
+  static const String routeName = '/mobile-chat-screen';
   const MobileChatScreen({super.key});
 
   @override

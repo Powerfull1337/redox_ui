@@ -39,7 +39,7 @@ class MyApp extends ConsumerWidget {
         ) 
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
-     home: ref.watch(userDataAuthProvider).when(
+      home: const LandingScreen(), /*ref.watch(userDataAuthProvider).when(
             data: (user) {
               if (user == null) {
                 return const LandingScreen();
@@ -52,7 +52,7 @@ class MyApp extends ConsumerWidget {
               );
             },
             loading: () => const Loader(),
-          ),
+          ),*/
       /*UserInformationScreen()*/
       /*const ResponsiveLayout(
         mobileScreenLayout: MobileLayoutScreen(),
