@@ -14,7 +14,7 @@ final authControllerProvider = Provider((ref) {
 final userDataAuthProvider = FutureProvider((ref) {
   final authController = ref.watch(authControllerProvider);
   return authController.getUserData();
-});
+}); 
 
 class AuthController {
   final AuthRepository authRepository;
@@ -42,5 +42,8 @@ class AuthController {
       ref: ref,
       context: context,
     );
+  }
+   Stream<UserModel> userDataById(String userId) {
+    return authRepository.userData(userId);
   }
 } 
