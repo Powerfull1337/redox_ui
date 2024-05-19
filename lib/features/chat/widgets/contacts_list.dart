@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:redox_ui/colors.dart';
 import 'package:redox_ui/common/widgets/loader.dart';
 import 'package:redox_ui/features/chat/controller/chat_controller.dart';
-import 'package:redox_ui/info.dart';
 import 'package:redox_ui/features/chat/screens/mobile_chat_screen.dart';
 import 'package:redox_ui/models/chat_contact.dart';
 

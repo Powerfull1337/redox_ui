@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/enums/message_enum.dart';
+import 'package:redox_ui/features/chat/widgets/display_text_image_gif.dart';
 
 class MyMessageCard extends StatelessWidget {
   final String message;
   final String date;
+  final MessageEnum type;
+  // final VoidCallback onLeftSwipe;
+  // final String repliedText;
+  // final String username;
+  // final MessageEnum repliedMessageType;
+  // final bool isSeen;
 
-  const MyMessageCard({super.key, required this.message, required this.date});
+  const MyMessageCard({
+    super.key,
+    required this.message,
+    required this.date,
+    required this.type,
+    // required this.onLeftSwipe,
+    // required this.repliedText,
+    //required this.username,
+    //required this.repliedMessageType,
+    //required this.isSeen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +41,13 @@ class MyMessageCard extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 30,
-                  top: 5,
-                  bottom: 20,
-                ),
-                child: Text(
-                  message,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+                  padding: type == MessageEnum.text ? const EdgeInsets.only(
+                    left: 10,
+                    right: 30,
+                    top: 5,
+                    bottom: 20,
+                  ): const EdgeInsets.only(left:5, top: 5, right: 5, bottom: 25),
+                  child: DisplayTextImageGIF(message: message, type: type)),
               Positioned(
                 bottom: 4,
                 right: 10,
@@ -43,7 +55,7 @@ class MyMessageCard extends StatelessWidget {
                   children: [
                     Text(
                       date,
-                      style:const TextStyle(
+                      style: const TextStyle(
                         fontSize: 13,
                         color: Colors.white60,
                       ),

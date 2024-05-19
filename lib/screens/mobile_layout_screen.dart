@@ -1,11 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
 import 'package:redox_ui/features/select_contacts/screens/select_contact_screen.dart';
-import 'package:redox_ui/widgets/contacts_list.dart';
+import 'package:redox_ui/features/chat/widgets/contacts_list.dart';
 
-class MobileLayoutScreen extends StatelessWidget {
+class MobileLayoutScreen extends ConsumerStatefulWidget  {
   const MobileLayoutScreen({super.key});
 
+  @override
+  ConsumerState<MobileLayoutScreen> createState() => _MobileLayoutScreenState() ;
+}
+
+class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with WidgetsBindingObserver {
+@override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+  @override
+ void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed:
+        ref.read(authControllerProvider).setUserState(true);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        ref.read(authControllerProvider).setUserState(false);
+        break;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
