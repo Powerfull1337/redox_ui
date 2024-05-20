@@ -7,8 +7,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:redox_ui/colors.dart';
 import 'package:redox_ui/common/enums/message_enum.dart';
+import 'package:redox_ui/common/provider/message_reply_provider.dart';
 import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/features/chat/controller/chat_controller.dart';
+import 'package:redox_ui/features/chat/widgets/message_reply_preview.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
@@ -53,31 +55,29 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             _messageController.text.trim(),
             widget.recieverUserId,
+    //        widget.isGroupChat,
           );
-      _messageController.clear();
       setState(() {
-        isShowSendButton = false;
+        _messageController.text = '';
       });
     } else {
+      var tempDir = await getTemporaryDirectory();
+      var path = '${tempDir.path}/flutter_sound.aac';
       if (!isRecorderInit) {
         return;
       }
       if (isRecording) {
-        var path = await _soundRecorder!.stopRecorder();
-        sendFileMessage(File(path!), MessageEnum.audio);
-        setState(() {
-          isRecording = false;
-        });
+        await _soundRecorder!.stopRecorder();
+        sendFileMessage(File(path), MessageEnum.audio);
       } else {
-        var tempDir = await getTemporaryDirectory();
-        var path = '${tempDir.path}/flutter_sound.aac';
         await _soundRecorder!.startRecorder(
           toFile: path,
         );
-        setState(() {
-          isRecording = true;
-        });
       }
+
+      setState(() {
+        isRecording = !isRecording;
+      });
     }
   }
 
@@ -140,8 +140,14 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
+    final messageReply = ref.watch(messageReplyProvider);
+    final isShowMessageReply = messageReply != null;
     return Column(
       children: [
+        if (isShowMessageReply)
+          const MessageReplyPreview()
+        else
+          const SizedBox(),
         Row(
           children: [
             Expanded(

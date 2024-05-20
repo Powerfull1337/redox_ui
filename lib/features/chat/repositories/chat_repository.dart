@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:redox_ui/common/enums/message_enum.dart';
+import 'package:redox_ui/common/provider/message_reply_provider.dart';
 import 'package:redox_ui/common/repositories/common_firebase_storage_repository.dart';
 import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/models/chat_contact.dart';
@@ -121,8 +122,11 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
     required DateTime timeSent,
     required String messageId,
     required String username,
-    required recieverUserName,
     required MessageEnum messageType,
+    required MessageReply? messageReply,
+    required String senderUsername,
+    required recieverUserName,
+
  })async{
  final message = Message(
       senderId: auth.currentUser!.uid,
@@ -131,7 +135,16 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
       type: messageType,
       timeSent: timeSent,
       messageId: messageId,
-      isSeen: false);
+      isSeen: false,
+      repliedMessage: messageReply == null ? '' : messageReply.message,
+      repliedTo: messageReply == null
+          ? ''
+          : messageReply.isMe
+              ? senderUsername
+              : recieverUserName ?? '',
+      repliedMessageType:
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+      );
             // users -> sender id -> reciever id -> messages -> message id -> store message
  await firestore
           .collection('users')
@@ -160,7 +173,7 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
     required String text,
     required String recieverUserId,
     required UserModel senderUser,
- //   required MessageReply? messageReply,
+    required MessageReply? messageReply,
  //   required bool isGroupChat,
   }) async {
     try {
@@ -185,13 +198,15 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
       );
 
       _saveMessageToMessageSubcollection(
-        recieverUserId: recieverUserId,
+       recieverUserId: recieverUserId,
         text: text,
         timeSent: timeSent,
         messageType: MessageEnum.text,
         messageId: messageId,
         username: senderUser.name,
+        messageReply: messageReply,
         recieverUserName: recieverUserData.name,
+        senderUsername: senderUser.name,
       );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
@@ -204,7 +219,7 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
     required UserModel senderUserData,
     required ProviderRef ref,
     required MessageEnum messageEnum,
-   // required MessageReply? messageReply,
+    required MessageReply? messageReply,
   //  required bool isGroupChat,
   }) async {
     try {
@@ -259,8 +274,11 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
         messageId: messageId,
         username: senderUserData.name,
         messageType: messageEnum,
-       // messageReply: messageReply,
+  
+        messageReply: messageReply,
         recieverUserName: recieverUserData.name,
+        senderUsername: senderUserData.name,
+
        // senderUsername: senderUserData.name,
        // isGroupChat: isGroupChat,
       );
@@ -313,4 +331,31 @@ Stream<List<Message>> getChatStream(String recieverUserId) {
       showSnackBar(context: context, content: e.toString());
     }
   }*/
+  void setChatMessageSeen(
+    BuildContext context,
+    String recieverUserId,
+    String messageId,
+  ) async {
+    try {
+      await firestore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .collection('chats')
+          .doc(recieverUserId)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+
+      await firestore
+          .collection('users')
+          .doc(recieverUserId)
+          .collection('chats')
+          .doc(auth.currentUser!.uid)
+          .collection('messages')
+          .doc(messageId)
+          .update({'isSeen': true});
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
 }

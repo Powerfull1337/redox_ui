@@ -1,21 +1,29 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
 import 'package:redox_ui/features/select_contacts/screens/select_contact_screen.dart';
 import 'package:redox_ui/features/chat/widgets/contacts_list.dart';
+import 'package:redox_ui/features/status/screens/confirm_status_screen.dart';
+import 'package:redox_ui/features/status/screens/status_contract_screen.dart';
 
-class MobileLayoutScreen extends ConsumerStatefulWidget  {
+class MobileLayoutScreen extends ConsumerStatefulWidget {
   const MobileLayoutScreen({super.key});
 
   @override
-  ConsumerState<MobileLayoutScreen> createState() => _MobileLayoutScreenState() ;
+  ConsumerState<MobileLayoutScreen> createState() => _MobileLayoutScreenState();
 }
 
-class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with WidgetsBindingObserver {
-@override
+class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  late TabController tabBarController;
+  @override
   void initState() {
     super.initState();
+    tabBarController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -24,8 +32,9 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with Wi
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
+
   @override
- void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.resumed:
@@ -39,6 +48,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with Wi
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -49,7 +59,7 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with Wi
           backgroundColor: appBarColor,
           centerTitle: false,
           title: const Text(
-            'Redox',
+            'WhatsApp',
             style: TextStyle(
               fontSize: 20,
               color: Colors.grey,
@@ -61,20 +71,31 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with Wi
               icon: const Icon(Icons.search, color: Colors.grey),
               onPressed: () {},
             ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.grey),
-              onPressed: () {},
+            PopupMenuButton(
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.grey,
+              ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text(
+                    'Create Group',
+                  ),
+                  onTap:(){}
+                )
+              ],
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
+            controller: tabBarController,
             indicatorColor: tabColor,
             indicatorWeight: 4,
             labelColor: tabColor,
             unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
-            tabs: [
+            tabs: const [
               Tab(
                 text: 'CHATS',
               ),
@@ -87,10 +108,28 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen> with Wi
             ],
           ),
         ),
-        body: const ContactsList(),
+        body: TabBarView(
+          controller: tabBarController,
+          children: const [
+            ContactsList(),
+            StatusContactsScreen(),
+            Text('Calls')
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, SelectContactsScreen.routeName);
+          onPressed: () async {
+            if (tabBarController.index == 0) {
+              Navigator.pushNamed(context, SelectContactsScreen.routeName);
+            } else {
+              File? pickedImage = await pickImageFromGallery(context);
+              if (pickedImage != null) {
+                Navigator.pushNamed(
+                  context,
+                  ConfirmStatusScreen.routeName,
+                  arguments: pickedImage,
+                );
+              }
+            }
           },
           backgroundColor: tabColor,
           child: const Icon(
