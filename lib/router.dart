@@ -5,6 +5,7 @@ import 'package:redox_ui/common/widgets/error.dart';
 import 'package:redox_ui/features/auth/screens/login_screen.dart';
 import 'package:redox_ui/features/auth/screens/otp_screen.dart';
 import 'package:redox_ui/features/auth/screens/user_information_screen.dart';
+import 'package:redox_ui/features/group/screens/create_group_screen.dart';
 import 'package:redox_ui/features/select_contacts/screens/select_contact_screen.dart';
 import 'package:redox_ui/features/chat/screens/mobile_chat_screen.dart';
 import 'package:redox_ui/features/status/screens/confirm_status_screen.dart';
@@ -20,40 +21,53 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case OTPScreen.routeName:
       final verificationId = settings.arguments as String;
       return MaterialPageRoute(
-          builder: (context) => OTPScreen(verificationId: verificationId));
+        builder: (context) => OTPScreen(
+          verificationId: verificationId,
+        ),
+      );
     case UserInformationScreen.routeName:
       return MaterialPageRoute(
-          builder: (context) => const UserInformationScreen());
+        builder: (context) => const UserInformationScreen(),
+      );
     case SelectContactsScreen.routeName:
       return MaterialPageRoute(
-          builder: (context) => const SelectContactsScreen());
+        builder: (context) => const SelectContactsScreen(),
+      );
     case MobileChatScreen.routeName:
       final arguments = settings.arguments as Map<String, dynamic>;
-      final name = arguments['name'];
-      final uid = arguments['uid'];
+      final name = arguments['name'] as String;
+      final uid = arguments['uid'] as String;
+      final isGroupChat = arguments['isGroupChat'] as bool? ??
+          false; // Provide a default value if null
       return MaterialPageRoute(
-          builder: (context) =>  MobileChatScreen(
-            name: name,
-            uid: uid,
-          ));
-      case ConfirmStatusScreen.routeName:
+        builder: (context) => MobileChatScreen(
+          name: name,
+          uid: uid,
+          isGroupChat: isGroupChat,
+        ),
+      );
+    case ConfirmStatusScreen.routeName:
       final file = settings.arguments as File;
       return MaterialPageRoute(
         builder: (context) => ConfirmStatusScreen(
           file: file,
         ),
       );
-      case StatusScreen.routeName:
+    case StatusScreen.routeName:
       final status = settings.arguments as Status;
       return MaterialPageRoute(
         builder: (context) => StatusScreen(
           status: status,
         ),
       );
+    case CreateGroupScreen.routeName:
+      return MaterialPageRoute(
+        builder: (context) => const CreateGroupScreen(),
+      );
     default:
       return MaterialPageRoute(
         builder: (context) => const Scaffold(
-          body: ErrorScreen(error: 'This page does\'nt exist'),
+          body: ErrorScreen(error: 'This page doesn\'t exist'),
         ),
       );
   }

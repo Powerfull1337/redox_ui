@@ -6,7 +6,7 @@ import 'package:swipe_to/swipe_to.dart';
 
 class SenderMessageCard extends StatelessWidget {
   const SenderMessageCard({
-    super.key,
+    Key? key,
     required this.message,
     required this.date,
     required this.type,
@@ -14,8 +14,7 @@ class SenderMessageCard extends StatelessWidget {
     required this.repliedText,
     required this.username,
     required this.repliedMessageType,
-  });
-
+  }) : super(key: key);
   final String message;
   final String date;
   final MessageEnum type;

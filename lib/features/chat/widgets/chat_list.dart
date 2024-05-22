@@ -13,11 +13,11 @@ import 'package:redox_ui/features/chat/widgets/sender_message_card.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   final String recieverUserId;
-//  final bool isGroupChat;
+  final bool isGroupChat;
   const ChatList({
     super.key,
     required this.recieverUserId,
- //   required this.isGroupChat,
+    required this.isGroupChat,
   });
 
   @override
@@ -34,12 +34,11 @@ class _ChatListState extends ConsumerState<ChatList> {
   }
 
   void onMessageSwipe(
-    DragUpdateDetails details, // Add this parameter
     String message,
     bool isMe,
     MessageEnum messageEnum,
   ) {
-    ref.read(messageReplyProvider.notifier).update(
+    ref.read(messageReplyProvider.state).update(
           (state) => MessageReply(
             message,
             isMe,
@@ -48,15 +47,14 @@ class _ChatListState extends ConsumerState<ChatList> {
         );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Message>>(
-        stream: 
-        //  ? ref
-             //   .read(chatControllerProvider)
-         //       .groupChatStream(widget.recieverUserId)
-             ref
+        stream: widget.isGroupChat
+            ? ref
+                .read(chatControllerProvider)
+                .groupChatStream(widget.recieverUserId)
+            : ref
                 .read(chatControllerProvider)
                 .chatStream(widget.recieverUserId),
         builder: (context, snapshot) {
@@ -64,9 +62,17 @@ class _ChatListState extends ConsumerState<ChatList> {
             return const Loader();
           }
 
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No messages yet'),
+            );
+          }
+
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            messageController
-                .jumpTo(messageController.position.maxScrollExtent);
+            if (messageController.hasClients) {
+              messageController
+                  .jumpTo(messageController.position.maxScrollExtent);
+            }
           });
 
           return ListView.builder(
@@ -95,7 +101,6 @@ class _ChatListState extends ConsumerState<ChatList> {
                   username: messageData.repliedTo,
                   repliedMessageType: messageData.repliedMessageType,
                   onLeftSwipe: (details) => onMessageSwipe(
-                    details,
                     messageData.text,
                     true,
                     messageData.type,
@@ -110,12 +115,10 @@ class _ChatListState extends ConsumerState<ChatList> {
                 username: messageData.repliedTo,
                 repliedMessageType: messageData.repliedMessageType,
                 onRightSwipe: (details) => onMessageSwipe(
-                  details,
                   messageData.text,
                   false,
                   messageData.type,
                 ),
-
                 repliedText: messageData.repliedMessage,
               );
             },

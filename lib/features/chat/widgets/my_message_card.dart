@@ -23,7 +23,7 @@ class MyMessageCard extends StatelessWidget {
     required this.repliedText,
     required this.username,
     required this.repliedMessageType,
-   required this.isSeen,
+    required this.isSeen,
   });
 
   @override
@@ -104,9 +104,7 @@ class MyMessageCard extends StatelessWidget {
                           color: Colors.white60,
                         ),
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      const SizedBox(width: 5),
                       Icon(
                         isSeen ? Icons.done_all : Icons.done,
                         size: 20,

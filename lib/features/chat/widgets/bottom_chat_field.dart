@@ -14,11 +14,12 @@ import 'package:redox_ui/features/chat/widgets/message_reply_preview.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String recieverUserId;
-
+  final bool isGroupChat;
   const BottomChatField({
-    super.key,
+    Key? key,
     required this.recieverUserId,
-  });
+    required this.isGroupChat,
+  }) : super(key: key);
 
   @override
   ConsumerState<BottomChatField> createState() => _BottomChatFieldState();
@@ -55,7 +56,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             context,
             _messageController.text.trim(),
             widget.recieverUserId,
-    //        widget.isGroupChat,
+            widget.isGroupChat,
           );
       setState(() {
         _messageController.text = '';
@@ -81,12 +82,16 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     }
   }
 
-  void sendFileMessage(File file, MessageEnum messageEnum) {
+  void sendFileMessage(
+    File file,
+    MessageEnum messageEnum,
+  ) {
     ref.read(chatControllerProvider).sendFileMessage(
           context,
           file,
           widget.recieverUserId,
           messageEnum,
+          widget.isGroupChat,
         );
   }
 
@@ -103,6 +108,18 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       sendFileMessage(video, MessageEnum.video);
     }
   }
+
+  /*void selectGIF() async {
+    final gif = await pickGIF(context);
+    if (gif != null) {
+      ref.read(chatControllerProvider).sendGIFMessage(
+            context,
+            gif.url,
+            widget.recieverUserId,
+            widget.isGroupChat,
+          );
+    }
+  }*/
 
   void hideEmojiContainer() {
     setState(() {
@@ -133,7 +150,6 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void dispose() {
     super.dispose();
     _messageController.dispose();
-    focusNode.dispose();
     _soundRecorder!.closeRecorder();
     isRecorderInit = false;
   }
@@ -144,10 +160,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
     final isShowMessageReply = messageReply != null;
     return Column(
       children: [
-        if (isShowMessageReply)
-          const MessageReplyPreview()
-        else
-          const SizedBox(),
+        isShowMessageReply ? const MessageReplyPreview() : const SizedBox(),
         Row(
           children: [
             Expanded(
@@ -155,26 +168,34 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 focusNode: focusNode,
                 controller: _messageController,
                 onChanged: (val) {
-                  setState(() {
-                    isShowSendButton = val.isNotEmpty;
-                  });
+                  if (val.isNotEmpty) {
+                    setState(() {
+                      isShowSendButton = true;
+                    });
+                  } else {
+                    setState(() {
+                      isShowSendButton = false;
+                    });
+                  }
                 },
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: mobileChatBoxColor,
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: SizedBox(
                       width: 100,
                       child: Row(
                         children: [
                           IconButton(
                             onPressed: toggleEmojiKeyboardContainer,
-                            icon: const Icon(Icons.emoji_emotions),
-                            color: Colors.grey,
+                            icon: const Icon(
+                              Icons.emoji_emotions,
+                              color: Colors.grey,
+                            ),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: (){},
                             icon: const Icon(
                               Icons.gif,
                               color: Colors.grey,
@@ -202,7 +223,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                             Icons.attach_file,
                             color: Colors.grey,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -233,7 +254,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                     isShowSendButton
                         ? Icons.send
                         : isRecording
-                            ? Icons.stop
+                            ? Icons.close
                             : Icons.mic,
                     color: Colors.white,
                   ),

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:redox_ui/colors.dart';
 import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
+import 'package:redox_ui/features/group/screens/create_group_screen.dart';
 import 'package:redox_ui/features/select_contacts/screens/select_contact_screen.dart';
 import 'package:redox_ui/features/chat/widgets/contacts_list.dart';
 import 'package:redox_ui/features/status/screens/confirm_status_screen.dart';
@@ -81,7 +82,9 @@ class _MobileLayoutScreenState extends ConsumerState<MobileLayoutScreen>
                   child: const Text(
                     'Create Group',
                   ),
-                  onTap:(){}
+                  onTap:(){
+                   Future(() => Navigator.pushNamed(context, CreateGroupScreen.routeName));
+                  }
                 )
               ],
             ),

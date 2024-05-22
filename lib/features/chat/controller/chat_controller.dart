@@ -8,6 +8,7 @@ import 'package:redox_ui/common/provider/message_reply_provider.dart';
 import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
 import 'package:redox_ui/features/chat/repositories/chat_repository.dart';
 import 'package:redox_ui/models/chat_contact.dart';
+import 'package:redox_ui/models/group.dart';
 import 'package:redox_ui/models/message.dart';
 
 
@@ -28,19 +29,27 @@ class ChatController {
     required this.ref,
   });
 
-    Stream<List<ChatContact>> chatContacts() {
+  Stream<List<ChatContact>> chatContacts() {
     return chatRepository.getChatContacts();
+  }
+
+  Stream<List<Group>> chatGroups() {
+    return chatRepository.getChatGroups();
   }
 
   Stream<List<Message>> chatStream(String recieverUserId) {
     return chatRepository.getChatStream(recieverUserId);
   }
 
-    void sendTextMessage(
+  Stream<List<Message>> groupChatStream(String groupId) {
+    return chatRepository.getGroupChatStream(groupId);
+  }
+
+  void sendTextMessage(
     BuildContext context,
     String text,
     String recieverUserId,
-  //  bool isGroupChat,
+    bool isGroupChat,
   ) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
@@ -50,17 +59,18 @@ class ChatController {
             recieverUserId: recieverUserId,
             senderUser: value!,
             messageReply: messageReply,
-         //   isGroupChat: isGroupChat,
+            isGroupChat: isGroupChat,
           ),
         );
-    ref.read(messageReplyProvider.notifier).update((state) => null);
+    ref.read(messageReplyProvider.state).update((state) => null);
   }
+
   void sendFileMessage(
     BuildContext context,
     File file,
     String recieverUserId,
     MessageEnum messageEnum,
-  //  bool isGroupChat,
+    bool isGroupChat,
   ) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData(
@@ -72,18 +82,19 @@ class ChatController {
             messageEnum: messageEnum,
             ref: ref,
             messageReply: messageReply,
-         //   isGroupChat: isGroupChat,
+            isGroupChat: isGroupChat,
           ),
         );
-    ref.read(messageReplyProvider.notifier).update((state) => null);
+    ref.read(messageReplyProvider.state).update((state) => null);
   }
- /* void sendGIFMessage(
+
+  void sendGIFMessage(
     BuildContext context,
     String gifUrl,
     String recieverUserId,
-  //  bool isGroupChat,
+    bool isGroupChat,
   ) {
-   // final messageReply = ref.read(messageReplyProvider);
+    final messageReply = ref.read(messageReplyProvider);
     int gifUrlPartIndex = gifUrl.lastIndexOf('-') + 1;
     String gifUrlPart = gifUrl.substring(gifUrlPartIndex);
     String newgifUrl = 'https://i.giphy.com/media/$gifUrlPart/200.gif';
@@ -93,13 +104,14 @@ class ChatController {
             context: context,
             gifUrl: newgifUrl,
             recieverUserId: recieverUserId,
-           senderUser: value!,
-          //  messageReply: messageReply,
-          //  isGroupChat: isGroupChat,
+            senderUser: value!,
+            messageReply: messageReply,
+            isGroupChat: isGroupChat,
           ),
         );
-   // ref.read(messageReplyProvider.state).update((state) => null);
-  }*/
+    ref.read(messageReplyProvider.state).update((state) => null);
+  }
+
   void setChatMessageSeen(
     BuildContext context,
     String recieverUserId,
