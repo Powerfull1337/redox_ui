@@ -112,41 +112,57 @@ class StatusRepository {
     }
   }
 
-  Future<List<Status>> getStatus(BuildContext context) async {
-    List<Status> statusData = [];
-    try {
-      List<Contact> contacts = [];
-      if (await FlutterContacts.requestPermission()) {
-        contacts = await FlutterContacts.getContacts(withProperties: true);
-      }
-      for (int i = 0; i < contacts.length; i++) {
-        var statusesSnapshot = await firestore
-            .collection('status')
-            .where(
-              'phoneNumber',
-              isEqualTo: contacts[i].phones[0].number.replaceAll(
-                    ' ',
-                    '',
-                  ),
-            )
-            .where(
-              'createdAt',
-              isGreaterThan: DateTime.now()
-                  .subtract(const Duration(hours: 24))
-                  .millisecondsSinceEpoch,
-            )
-            .get();
-        for (var tempData in statusesSnapshot.docs) {
-          Status tempStatus = Status.fromMap(tempData.data());
-          if (tempStatus.whoCanSee.contains(auth.currentUser!.uid)) {
-            statusData.add(tempStatus);
-          }
+ Future<List<Status>> getStatus(BuildContext context) async {
+  List<Status> statusData = [];
+  try {
+    bool permissionGranted = await FlutterContacts.requestPermission();
+    if (!permissionGranted) {
+      showSnackBar(context: context, content: 'Contacts permission not granted');
+      return [];
+    }
+
+    List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true);
+
+    // Debugging contacts loaded
+    if (contacts.isEmpty) {
+      showSnackBar(context: context, content: 'No contacts found');
+      return [];
+    }
+
+    for (int i = 0; i < contacts.length; i++) {
+      var contactPhone = contacts[i].phones.isNotEmpty ? contacts[i].phones[0].number.replaceAll(' ', '') : '';
+      if (contactPhone.isEmpty) continue;
+
+
+      var statusesSnapshot = await firestore
+          .collection('status')
+          .where('phoneNumber', isEqualTo: contactPhone)
+          .where(
+            'createdAt',
+            isGreaterThan: DateTime.now()
+                .subtract(const Duration(hours: 24))
+                .millisecondsSinceEpoch,
+          )
+          .get();
+
+      // Debugging fetched statuses
+
+
+      for (var tempData in statusesSnapshot.docs) {
+        Status tempStatus = Status.fromMap(tempData.data());
+        if (tempStatus.whoCanSee.contains(auth.currentUser!.uid)) {
+          statusData.add(tempStatus);
         }
       }
-    } catch (e) {
-      if (kDebugMode) print(e);
-      showSnackBar(context: context, content: e.toString());
     }
-    return statusData;
+
+    // Debugging final status list
+    print('Final statuses count: ${statusData.length}');
+
+  } catch (e) {
+    if (kDebugMode) print(e);
+    showSnackBar(context: context, content: e.toString());
   }
+  return statusData;
+}
 }

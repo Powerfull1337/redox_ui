@@ -30,11 +30,11 @@ void navigateToLoginScreen(BuildContext context){
             SizedBox(height: size.height / 9),
             Image.asset(
               'assets/bg.png',
-              height: 340,
-              width: 340,
+              height: 300,
+              width: 300,
               color: messageColor,
             ),
-            SizedBox(height: size.height / 9),
+            SizedBox(height: size.height / 10),
             const Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
@@ -45,7 +45,7 @@ void navigateToLoginScreen(BuildContext context){
             ),
             const SizedBox(height: 10),
             SizedBox(
-              width: size.width * 0.75,
+              width: size.width * 0.6,
               child: CustomButton(
                 text: 'AGREE AND CONTINUE',
                 onPressed: () {

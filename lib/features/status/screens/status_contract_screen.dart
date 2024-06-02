@@ -7,15 +7,21 @@ import 'package:redox_ui/features/status/screens/status_screen.dart';
 import 'package:redox_ui/models/status_model.dart';
 
 class StatusContactsScreen extends ConsumerWidget {
-  const StatusContactsScreen({super.key});
+  const StatusContactsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder<List<Status>>(
+  return FutureBuilder<List<Status>>(
       future: ref.read(statusControllerProvider).getStatus(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loader();
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No statuses available'));
         }
         return ListView.builder(
           itemCount: snapshot.data!.length,

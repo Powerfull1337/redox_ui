@@ -9,9 +9,9 @@ class StatusScreen extends StatefulWidget {
   static const String routeName = '/status-screen';
   final Status status;
   const StatusScreen({
-    super.key,
+    Key? key,
     required this.status,
-  });
+  }) : super(key: key);
 
   @override
   State<StatusScreen> createState() => _StatusScreenState();
