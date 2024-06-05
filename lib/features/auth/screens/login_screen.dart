@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/common/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';

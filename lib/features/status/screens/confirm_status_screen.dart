@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/features/status/controller/status_controller.dart';
 
 class ConfirmStatusScreen extends ConsumerWidget {

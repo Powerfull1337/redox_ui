@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/common/utils/utils.dart';
 import 'package:redox_ui/features/group/controller/group_controller.dart';
 import 'package:redox_ui/features/group/widgets/select_contacts_group.dart';

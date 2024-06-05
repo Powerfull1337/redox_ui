@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/common/widgets/loader.dart';
 import 'package:redox_ui/features/chat/controller/chat_controller.dart';
 import 'package:redox_ui/features/chat/screens/mobile_chat_screen.dart';

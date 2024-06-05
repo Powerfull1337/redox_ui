@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/common/widgets/loader.dart';
 import 'package:redox_ui/features/status/controller/status_controller.dart';
 import 'package:redox_ui/features/status/screens/status_screen.dart';

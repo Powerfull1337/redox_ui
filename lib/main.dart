@@ -1,15 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 import 'package:redox_ui/common/widgets/error.dart';
 import 'package:redox_ui/common/widgets/loader.dart';
 import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
-
 import 'package:redox_ui/features/landing/screens/landing_screen.dart';
 import 'package:redox_ui/firebase_options.dart';
 import 'package:redox_ui/router.dart';
-import 'package:redox_ui/screens/mobile_layout_screen.dart';
+import 'package:redox_ui/mobile_layout_screen.dart';
 
 
 void main() async{

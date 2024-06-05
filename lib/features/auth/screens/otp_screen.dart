@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:redox_ui/colors.dart';
+import 'package:redox_ui/common/utils/colors.dart';
 //import 'package:redox_ui/common/widgets/custom_button.dart';
 import 'package:redox_ui/features/auth/conrtoller/auth_controller.dart';
 //import 'package:redox_ui/screens/mobile_layout_screen.dart';
